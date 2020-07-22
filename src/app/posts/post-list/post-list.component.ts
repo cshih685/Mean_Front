@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostsService } from '../post.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
