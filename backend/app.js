@@ -1,4 +1,5 @@
 // LkHIYaMzwSils7oz
+const path = require("path");
 const express = require('express');
 const bodyParser = require("body-parser");
 
@@ -20,6 +21,7 @@ mongoose.connect("mongodb+srv://cshih685:LkHIYaMzwSils7oz@cluster0.f7prf.mongodb
 
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/images", express.static(path.join("backend/images")));
 
 //adding setHeader
 app.use((req, res, next) => {
