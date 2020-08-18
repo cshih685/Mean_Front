@@ -2,7 +2,10 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 
-const Post = require("./models/post");
+
+// const Post = require("./models/post");
+const postsRoutes = require("./routes/posts");
+
 const mongoose = require('mongoose');
 
 const app = express();
@@ -32,71 +35,6 @@ app.use((req, res, next) => {
   next();
 })
 
-//adding POST
-app.post("/api/posts", (req, res, next) => {
-  // const post = req.body;
-  const post = Post({
-    title: req.body.title,
-    content: req.body.content
-  })
-
-  // console.log(post);
-  post.save().then(createdPost => {
-    console.log(createdPost);
-    //201 means everything is ok also added one new resource
-    res.status(201).json({
-      message: 'Post added successfully',
-      postId: createdPost._id
-    });
-  });
-  /* will automatically create new collection which is
-  the plural and lowercase of model (Post -> posts) */
-});
-
-app.put("/api/posts/:id", (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  Post.updateOne({_id: req.params.id}, post).then(result => {
-    console.log(result);
-    res.status(200).json({ message: "Update successful!"});
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-    // const posts = [
-  //   {
-  //     id: "asdfjasdf",
-  //     title: "First server-side post",
-  //     content: "This is coming from the server"
-  //   },
-  //   {
-  //     id: "n;lka;j",
-  //     title: "Second server-side post",
-  //     content: "This is coming from the server"
-  //   }
-  // ];
-
-  //use Post (posts collection) to find all data in this collection
-  Post.find()
-    .then( documents => {
-      console.log(documents);
-      res.status(200).json({
-        message: 'Posts fetched successfully!',
-        posts: documents
-      });
-    })
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  console.log(req.params.id);
-  Post.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({message: "Post deleted!"});
-  })
-})
-
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
