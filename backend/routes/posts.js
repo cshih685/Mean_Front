@@ -75,15 +75,29 @@ router.put("/:id",
 });
 
 router.get("", (req, res, next) => {
+  console.log(req.query);
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const postQuery = Post.find() //this won't return anything unless we use .then
+  let fetchedPosts;
+  if(pageSize && currentPage){
+    postQuery
+      .skip(pageSize * (currentPage - 1)) //if pageSize = 10, currentPage 2, we skip 10 data
+      .limit(pageSize);
+  }
   //use Post (posts collection) to find all data in this collection
-  Post.find()
+  postQuery
     .then( documents => {
       console.log(documents);
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then(count => {
       res.status(200).json({
         message: 'Posts fetched successfully!',
-        posts: documents
-      });
-    })
+        posts: fetchedPosts,
+        maxPosts: count
+    });})
 });
 
 router.get("/:id", (req, res, next) => {
